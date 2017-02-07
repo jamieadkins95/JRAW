@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.GsonBuilder;
 import com.ning.http.client.AsyncHttpClient;
 import net.dean.jraw.auth.AuthenticationListener;
+import net.dean.jraw.firebase.FirebaseService;
+import net.dean.jraw.firebase.Request;
 import net.dean.jraw.http.*;
 import net.dean.jraw.http.oauth.Credentials;
 import net.dean.jraw.http.oauth.InvalidScopeException;
@@ -15,13 +17,14 @@ import net.dean.jraw.models.meta.SubmissionSerializer;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.util.JrawUtils;
-import org.jdeferred.DoneCallback;
 import org.restonfire.BaseFirebaseRestDatabaseFactory;
 import org.restonfire.FirebaseRestDatabase;
 import org.restonfire.FirebaseRestReference;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-import java.lang.System;
-import java.net.URL;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -186,14 +189,19 @@ public class RedditClient extends RestClient {
         }
 
         if (response.isSuccessful()) {
-            FirebaseRestReference now = firebaseRestReference.child(String.valueOf(System.currentTimeMillis()));
-            now.setValue(request.getUrl())
-                    .done(new DoneCallback<URL>() {
-                        @Override
-                        public void onDone(URL result) {
-                            System.out.println(result);
-                        }
-                    });
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://pcsx-75a91.firebaseio.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            FirebaseService service = retrofit.create(FirebaseService.class);
+
+            try {
+                Response<Request> firebaseResponse = service.saveRequest(new Request(request.getUrl().toString()))
+                        .execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         if (adjustRatelimit)
