@@ -1,5 +1,7 @@
 #Java Reddit API Wrapper
 
+>Forked to include tracking of all reddit api requests, to be used in a Computer Science project.
+
 [![travis-ci build status](https://img.shields.io/travis/thatJavaNerd/JRAW.svg)](https://travis-ci.org/thatJavaNerd/JRAW) [![Coverage Status](https://img.shields.io/coveralls/thatJavaNerd/JRAW.svg)](https://coveralls.io/r/thatJavaNerd/JRAW) [![reddit API coverage](https://img.shields.io/badge/api--coverage-64%-blue.svg)](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md) [![Latest release](https://img.shields.io/github/release/thatJavaNerd/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
 
 >JRAW is currently in an experimental stage, and therefore subject to breaking API changes that could occur at any time.
