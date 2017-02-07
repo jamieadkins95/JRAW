@@ -1,8 +1,6 @@
 package net.dean.jraw;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.gson.GsonBuilder;
-import com.ning.http.client.AsyncHttpClient;
 import net.dean.jraw.auth.AuthenticationListener;
 import net.dean.jraw.firebase.FirebaseService;
 import net.dean.jraw.firebase.Request;
@@ -17,9 +15,6 @@ import net.dean.jraw.models.meta.SubmissionSerializer;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.util.JrawUtils;
-import org.restonfire.BaseFirebaseRestDatabaseFactory;
-import org.restonfire.FirebaseRestDatabase;
-import org.restonfire.FirebaseRestReference;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -59,9 +54,6 @@ public class RedditClient extends RestClient {
     private OAuthData authData;
     private OAuthHelper authHelper;
 
-    private FirebaseRestDatabase firebaseDatabase;
-    private FirebaseRestReference firebaseRestReference;
-
     /**
      * Instantiates a new RedditClient and adds the given user agent to the default headers
      *
@@ -84,19 +76,6 @@ public class RedditClient extends RestClient {
         this.adjustRatelimit = true;
         this.retryLimit = DEFAULT_RETRY_LIMIT;
         setHttpsDefault(true);
-
-        BaseFirebaseRestDatabaseFactory factory = new BaseFirebaseRestDatabaseFactory(
-                new AsyncHttpClient(),
-                new GsonBuilder().create()
-        );
-
-        // Expects that Firebase access rules do not require authentication
-        firebaseDatabase = factory.create(
-                "https://pcsx-75a91.firebaseio.com",
-                "AIzaSyBhPaWhP7nW4B7POqP1EhIhP-KJY7I_S_M" // accessToken
-        );
-
-        firebaseRestReference = firebaseDatabase.getReference("requests");
     }
 
     /**
